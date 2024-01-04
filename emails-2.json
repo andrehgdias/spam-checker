@@ -1,0 +1,10 @@
+[
+  {
+    "receiver": "john.doe@example.com",
+    "body": "Congratulations, John! You've won a special prize! Claim your prize now by clicking the link below: http://example.com/claim-prize Don't miss out on this amazing opportunity!"
+  },
+  {
+    "receiver": "jane.doe@example.com",
+    "body": "Congratulations, Jane! You're the lucky winner of our exclusive prize! Congratulations! Click the link to claim your reward: http://example.com/claim-your-gift Hurry, this offer won't last long!"
+  }
+]

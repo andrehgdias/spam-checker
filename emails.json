@@ -1,0 +1,42 @@
+[
+  {
+    "receiver": "john.doe@example.com",
+    "body": "Congratulations, John! You've won a special prize! Claim your prize now by clicking the link below: http://example.com/claim-prize Don't miss out on this amazing opportunity!"
+  },
+  {
+    "receiver": "jane.doe@example.com",
+    "body": "Congratulations, Jane! You're the lucky winner of our exclusive prize! Click the link to claim your reward: http://example.com/claim-your-gift Hurry, this offer won't last long!"
+  },
+  {
+    "receiver": "jack.doe@example.com",
+    "body": "Jack, you're a winner! You've been selected for a special prize! Don't miss your chance, claim it now: http://example.com/redeem-your-prize Act fast, and enjoy your reward!"
+  },
+  {
+    "receiver": "jill.doe@example.com",
+    "body": "Jill, you're a winner! You've been chosen for an exciting prize! Redeem it now by clicking the link: http://example.com/get-your-reward Claim your prize before it's too late!"
+  },
+  {
+    "receiver": "jim.doe@example.com",
+    "body": "Congratulations, Jim! You're the lucky recipient of a fantastic prize! Click the link below to claim it: http://example.com/grab-your-gift Act quickly and enjoy your winnings!"
+  },
+  {
+    "receiver": "carol.smith@example.com",
+    "body": "Hi Carol, Urgent Notice: Your warranty has expired! Act now to renew and avoid any future inconvenience. Click the link below to renew your warranty: http://example.com/renew-warranty Don't let this opportunity slip away!"
+  },
+  {
+    "receiver": "dave.smith@example.com",
+    "body": "Hi Dave, Important: Your warranty has expired, and a fine is pending! Immediate action required. Click the link to pay the fine and renew your warranty: http://example.com/pay-fine-and-renew Act now to avoid further penalties!"
+  },
+  {
+    "receiver": "emily.smith@example.com",
+    "body": "Hello Emily, Final Warning: Your warranty has expired, and a fine is due! Don't ignore this notice. Click the link to settle the fine and renew your warranty: http://example.com/settle-fine-and-renew Avoid additional charges by acting promptly!"
+  },
+  {
+    "receiver": "fred.smith@example.com",
+    "body": "Hello Fred, Immediate Action Required: Your warranty has lapsed, and a fine is pending! Click the link to pay the fine and secure your renewed warranty: http://example.com/pay-now-and-renew Act now to prevent any disruptions!"
+  },
+  {
+    "receiver": "grace.smith@example.com",
+    "body": "Hi Grace, Urgent: Expired Warranty Fine Notice! Your warranty has expired, and a fine is due. Click the link to pay the fine and renew your warranty: http://example.com/pay-fine-now Take action now to avoid further consequences!"
+  }
+]
