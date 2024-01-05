@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.io.Reader;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.InputMismatchException;
 import java.util.LinkedHashSet;
 import java.util.Scanner;
 
@@ -23,14 +24,14 @@ public class App {
         System.out.println("Enter file path to json:");
         String filePath = scanner.nextLine();
 
-        System.out.println(
-                "\nSimilarity threshold (If similarity is higher than X it may be considered SPAM - Value recommended: 0.32):");
-        float similarityThreshold = scanner.nextFloat();
-
-        System.out.println("\nNumber of similar emails allowed:");
-        int numOfSimilarEmailsAllowed = scanner.nextInt();
-
         try (Reader reader = new FileReader(filePath);) {
+            System.out.println(
+                    "\nSimilarity threshold (If similarity is higher than X it may be considered SPAM - Value recommended: 0.32):");
+            float similarityThreshold = scanner.nextFloat();
+
+            System.out.println("\nNumber of similar emails allowed:");
+            int numOfSimilarEmailsAllowed = scanner.nextInt();
+
             Gson gson = new Gson();
             Email[] emails = gson.fromJson(reader, Email[].class);
 
@@ -52,12 +53,6 @@ public class App {
                     TF_IDF_DATABASE[currEmailIndex].put(word, result);
                 }
                 allWords.addAll(Arrays.asList(words));
-
-                /*
-                 * for (String word : TF_IDF_DATABASE[currEmailIndex].keySet()) {
-                 * System.out.println(word + ": " + TF_IDF_DATABASE[currEmailIndex].get(word));
-                 * }
-                 */
             }
 
             System.out.println("\n--> Number of unique words: " + allWords.size());
@@ -90,11 +85,13 @@ public class App {
 
             boolean[] finalEmailSpamClassification = new boolean[emails.length];
             for (int i = 0; i < finalEmailSpamClassification.length; i++) {
-                int count = 0;
+                int similarEmailsCount = 0;
                 for (int j = 0; j < emailsSimilarity.length; j++) {
+                    if (i == j)
+                        continue;
                     if (emailsSimilarity[i][j] > similarityThreshold)
-                        count++;
-                    if (count > numOfSimilarEmailsAllowed) {
+                        similarEmailsCount++;
+                    if (similarEmailsCount > numOfSimilarEmailsAllowed) {
                         finalEmailSpamClassification[i] = true;
                         break;
                     }
@@ -108,12 +105,14 @@ public class App {
                 System.out.printf("| %-15d | %-4s |\n", i, finalEmailSpamClassification[i] ? "Yes" : "No");
             }
 
+        } catch (InputMismatchException e) {
+            System.err.println("Sorry, input wrong format: " + e.toString());
         } catch (FileNotFoundException e) {
             System.err.println("File not found: " + filePath);
         } catch (IOException e) {
-            System.err.println("Error reading the file: " + e.getMessage());
+            System.err.println("Error reading the file: " + filePath);
         } catch (Exception e) {
-            System.err.println("An unexpected error occurred: " + e.getMessage());
+            System.err.println("An unexpected error occurred: " + e.toString());
         } finally {
             scanner.close();
         }
