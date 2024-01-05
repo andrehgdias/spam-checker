@@ -21,8 +21,17 @@ public class SimilarityUtils {
         return normalizedVector;
     }
 
-    public static float[] calcCossineSimilarity(float[] currEmailNormalizedVector,
+    public static float calcCossineSimilarity(float[] currEmailNormalizedVector,
             float[] emailToCompareNormalizedVector) {
-        return null;
+        float dotProduct = 0f;
+        float normA = 0f;
+        float normB = 0f;
+        for (int i = 0; i < currEmailNormalizedVector.length; i++) {
+            dotProduct += currEmailNormalizedVector[i] * emailToCompareNormalizedVector[i];
+            normA += Math.pow(currEmailNormalizedVector[i], 2);
+            normB += Math.pow(emailToCompareNormalizedVector[i], 2);
+        }
+        float eucledianDist = (float) (Math.sqrt(normA) * Math.sqrt(normB));
+        return dotProduct / eucledianDist;
     }
 }
