@@ -10,8 +10,7 @@ public class TextUtils {
         Pattern pattern = Pattern.compile(regex);
         Matcher matcher = pattern.matcher(input);
 
-        String result = matcher.replaceAll("");
-        return result;
+        return matcher.replaceAll("");
     }
 
     public static String[] getCleanWords(String textBody) {
@@ -24,6 +23,7 @@ public class TextUtils {
     }
 
     public static int countWordOccurance(String word, String textBody) {
+    public static int countWordOccurrence(String word, String textBody) {
         int count = 0;
         for (String currWord : textBody.split("\\s+")) {
             String cleanCurrWord = removePunctuationAtWordEnd(currWord.toLowerCase());

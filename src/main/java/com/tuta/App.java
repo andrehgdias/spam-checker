@@ -4,11 +4,7 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.Reader;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.InputMismatchException;
-import java.util.LinkedHashSet;
-import java.util.Scanner;
+import java.util.*;
 
 import com.google.gson.Gson;
 
@@ -24,7 +20,8 @@ public class App {
         System.out.println("Enter file path to json:");
         String filePath = scanner.nextLine();
 
-        try (Reader reader = new FileReader(filePath);) {
+        try (Reader reader = new FileReader(filePath)) {
+            // User input for similarity threshold and the number of similar emails allowed
             System.out.println(
                     "\nSimilarity threshold (If similarity is higher than X it may be considered SPAM - Value recommended: 0.32):");
             float similarityThreshold = scanner.nextFloat();
@@ -35,67 +32,66 @@ public class App {
             Gson gson = new Gson();
             Email[] emails = gson.fromJson(reader, Email[].class);
 
-            LinkedHashSet<String> allWords = new LinkedHashSet<>();
-            HashMap<String, Float>[] TF_IDF_DATABASE = new HashMap[emails.length];
-            float[][] emailsSimilarity = new float[emails.length][emails.length];
+            // TF-IDF Database and Similarity Matrix initialization
+            Map<String, Map<Integer, Float>>TF_IDF_DATABASE = new HashMap<>();
+            SymmetricMatrix emailsSimilarity = new SymmetricMatrix(emails.length);
 
-            // Process each object in the array calculating it spam probability
+            // Process each email calculating its TF-IDF values
             for (int currEmailIndex = 0; currEmailIndex < emails.length; currEmailIndex++) {
                 final Email email = emails[currEmailIndex];
                 System.out.println("\n--> Processing email");
                 email.print();
 
-                TF_IDF_DATABASE[currEmailIndex] = new HashMap<>();
-
                 String[] words = TextUtils.getCleanWords(email.getBody());
                 for (String word : words) {
+                    TF_IDF_DATABASE.computeIfAbsent(word, s -> new HashMap<Integer, Float>());
+                    Map<Integer, Float> currWordMap = TF_IDF_DATABASE.get(word);
                     float result = SimilarityUtils.calcTFIDF(emails, email, word);
-                    TF_IDF_DATABASE[currEmailIndex].put(word, result);
+                    currWordMap.put(currEmailIndex, result);
+                    TF_IDF_DATABASE.put(word, currWordMap);
                 }
                 allWords.addAll(Arrays.asList(words));
             }
 
-            System.out.println("\n--> Number of unique words: " + allWords.size());
-            for (String word : allWords) {
-                System.out.println(word);
-            }
-            System.out.println("------------------------------\n");
+            System.out.println("\n--> Number of unique words: " + TF_IDF_DATABASE.keySet().size());
 
-            // Cossine Similarity
+            // Cosine Similarity calculation
             for (int currEmailIndex = 0; currEmailIndex < emails.length; currEmailIndex++) {
                 System.out.println("\n--> Current email index: " + currEmailIndex);
-                for (int indexEmailToCompare = 0; indexEmailToCompare < emails.length; indexEmailToCompare++) {
-                    if (indexEmailToCompare == currEmailIndex) {
-                        emailsSimilarity[currEmailIndex][indexEmailToCompare] = 1;
-                        continue;
-                    }
-                    float[] currEmailNormalizedVector = SimilarityUtils.normalize(
-                            TF_IDF_DATABASE[currEmailIndex],
-                            allWords);
-                    float[] emailToCompareNormalizedVector = SimilarityUtils.normalize(
-                            TF_IDF_DATABASE[indexEmailToCompare],
-                            allWords);
-                    emailsSimilarity[currEmailIndex][indexEmailToCompare] = SimilarityUtils.calcCossineSimilarity(
-                            currEmailNormalizedVector,
-                            emailToCompareNormalizedVector);
+                for (int indexEmailToCompare = currEmailIndex + 1; indexEmailToCompare < emails.length; indexEmailToCompare++) {
+                    float[] currEmailNormalizedVector = SimilarityUtils.getVector(TF_IDF_DATABASE, currEmailIndex);
+                    float[] emailToCompareNormalizedVector = SimilarityUtils.getVector(TF_IDF_DATABASE, indexEmailToCompare);
+
+                    if(Float.isNaN(emailsSimilarity.get(currEmailIndex, indexEmailToCompare))) {
+                        float similarity = SimilarityUtils.calcCosineSimilarity(
+                                currEmailNormalizedVector,
+                                emailToCompareNormalizedVector
+                        );
+                        emailsSimilarity.set(currEmailIndex, indexEmailToCompare, similarity);
                     System.out.println("indexEmailToCompare: " + indexEmailToCompare + " - similarity: "
-                            + emailsSimilarity[currEmailIndex][indexEmailToCompare]);
+                            + emailsSimilarity.get(currEmailIndex, indexEmailToCompare));
+                    }
                 }
             }
 
+            // Final Email Classification
+            System.out.println("\n--> Final classification");
             boolean[] finalEmailSpamClassification = new boolean[emails.length];
             for (int i = 0; i < finalEmailSpamClassification.length; i++) {
                 int similarEmailsCount = 0;
-                for (int j = 0; j < emailsSimilarity.length; j++) {
-                    if (i == j)
-                        continue;
-                    if (emailsSimilarity[i][j] > similarityThreshold)
+                for (int j = 0; j < emails.length; j++) {
+                    if (i == j) continue;
+                    if (emailsSimilarity.get(i, j) > similarityThreshold) {
                         similarEmailsCount++;
+                        System.out.printf("--> Email %d is similar to %d%n", i, j);
+                    }
                     if (similarEmailsCount > numOfSimilarEmailsAllowed) {
                         finalEmailSpamClassification[i] = true;
+                        System.out.printf("--> Email %d tagged as SPAM%n", i);
                         break;
                     }
                 }
+                System.out.println();
             }
 
             System.out.println("\n--> Final result");
@@ -106,13 +102,13 @@ public class App {
             }
 
         } catch (InputMismatchException e) {
-            System.err.println("Sorry, input wrong format: " + e.toString());
+            System.err.println("Sorry, input wrong format: " + e);
         } catch (FileNotFoundException e) {
             System.err.println("File not found: " + filePath);
         } catch (IOException e) {
             System.err.println("Error reading the file: " + filePath);
         } catch (Exception e) {
-            System.err.println("An unexpected error occurred: " + e.toString());
+            System.err.println("An unexpected error occurred: " + e);
         } finally {
             scanner.close();
         }
