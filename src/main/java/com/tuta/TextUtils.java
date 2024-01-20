@@ -4,7 +4,17 @@ import java.util.ArrayList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+/**
+ * Utility class providing various text processing methods.
+ */
 public class TextUtils {
+
+    /**
+     * Removes punctuation at the end of each word in the given text.
+     *
+     * @param input The input text.
+     * @return The text with punctuation at the end of each word removed.
+     */
     public static String removePunctuationAtWordEnd(String input) {
         String regex = "\\b\\p{Punct}+(?=(\\s|$))";
         Pattern pattern = Pattern.compile(regex);
@@ -13,6 +23,12 @@ public class TextUtils {
         return matcher.replaceAll("");
     }
 
+    /**
+     * Cleans and retrieves an array of words from the provided text.
+     *
+     * @param textBody The text body to extract words from.
+     * @return An array of cleaned words.
+     */
     public static String[] getCleanWords(String textBody) {
         ArrayList<String> words = new ArrayList<>();
         for (String word : textBody.split("\\s+")) {
@@ -22,7 +38,13 @@ public class TextUtils {
         return words.toArray(new String[0]);
     }
 
-    public static int countWordOccurance(String word, String textBody) {
+    /**
+     * Counts the occurrences of a specific word in the given text.
+     *
+     * @param word     The word to count.
+     * @param textBody The text body to search for occurrences.
+     * @return The number of occurrences of the specified word.
+     */
     public static int countWordOccurrence(String word, String textBody) {
         int count = 0;
         for (String currWord : textBody.split("\\s+")) {
@@ -32,6 +54,13 @@ public class TextUtils {
         return count;
     }
 
+    /**
+     * Counts the number of documents (emails) containing a specific word.
+     *
+     * @param word      The word to search for in the emails.
+     * @param allEmails An array of emails to search through.
+     * @return The number of documents containing the specified word.
+     */
     public static int countDocsHasWord(String word, Email[] allEmails) {
         int count = 0;
         for (Email email : allEmails) {
@@ -47,6 +76,12 @@ public class TextUtils {
         return count;
     }
 
+    /**
+     * Counts the number of words in the given text.
+     *
+     * @param textBody The text body to count words in.
+     * @return The number of words in the text.
+     */
     public static int countNumOfWords(String textBody) {
         String[] words = textBody.split("\\s+");
         return words.length;

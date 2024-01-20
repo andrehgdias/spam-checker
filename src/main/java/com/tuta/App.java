@@ -9,10 +9,15 @@ import java.util.*;
 import com.google.gson.Gson;
 
 /**
- * Hello world!
- *
+ * Main class for the Email Processor application.
+ * This program analyzes email content, calculates similarity metrics, and classifies emails as spam or non-spam.
  */
 public class App {
+    /**
+     * The entry point of the Email Processor application.
+     *
+     * @param args Command-line arguments (not used in this application).
+     */
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
 
@@ -50,7 +55,6 @@ public class App {
                     currWordMap.put(currEmailIndex, result);
                     TF_IDF_DATABASE.put(word, currWordMap);
                 }
-                allWords.addAll(Arrays.asList(words));
             }
 
             System.out.println("\n--> Number of unique words: " + TF_IDF_DATABASE.keySet().size());
