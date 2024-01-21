@@ -42,7 +42,7 @@ public class Email {
      */
     @Override
     public String toString() {
-        return String.format("To: %s\nBody: %s\n", this.receiver, this.body);
+        return String.format("To: %s\nBody: %s", this.receiver, this.body);
     }
 
     /**

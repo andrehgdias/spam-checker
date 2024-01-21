@@ -10,13 +10,16 @@ import java.util.regex.Pattern;
 public class TextUtils {
 
     /**
-     * Removes punctuation at the end of each word in the given text.
+     * Removes any trailing punctuation from the end of a given word in the input text.
+     * If the word ends with punctuation, it is stripped off.
      *
-     * @param input The input text.
-     * @return The text with punctuation at the end of each word removed.
+     * @param input The input text containing the word.
+     * @return The word without any punctuation at its end.
      */
     public static String removePunctuationAtWordEnd(String input) {
-        String regex = "\\b\\p{Punct}+(?=(\\s|$))";
+        if (input == null || input.isEmpty()) return input;
+
+        String regex = "\\p{Punct}$";
         Pattern pattern = Pattern.compile(regex);
         Matcher matcher = pattern.matcher(input);
 

@@ -19,18 +19,29 @@ public class SymmetricMatrix {
     /**
      * The size of the symmetric matrix (number of rows or columns).
      */
-    private final int size;
+    private final int symMatrixSize;
 
     /**
      * Constructs a symmetric matrix with the specified size.
      *
-     * @param size The size (number of rows or columns) of the symmetric matrix.
+     * @param symMatrixSize The size (number of rows or columns) of the symmetric matrix.
      */
-    public SymmetricMatrix(int size) {
+    public SymmetricMatrix(int symMatrixSize) {
         // Calculate the size needed for the one-dimensional array
-        this.size = size * (size - 1) / 2;
-        this.data = new float[this.size];
+        this.symMatrixSize = symMatrixSize;
+        final int auxSize = symMatrixSize * (symMatrixSize - 1) / 2;
+        this.data = new float[auxSize];
         Arrays.fill(this.data, Float.NaN);
+    }
+
+    /**
+     * Returns the one-dimensional array containing the data of the symmetric matrix.
+     * The data represents the lower triangular part of the matrix stored in a one-dimensional array.
+     *
+     * @return The data array of the symmetric matrix.
+     */
+    public float[] getData() {
+        return data;
     }
 
     /**
@@ -44,7 +55,7 @@ public class SymmetricMatrix {
      */
     public void set(int row, int col, float value) {
         // Ensure row and col are valid indices
-        if (row < 0 || col < 0 || row >= size || col >= size) {
+        if (row < 0 || col < 0 || row >= symMatrixSize || col >= symMatrixSize) {
             throw new IllegalArgumentException("Invalid indices");
         }
 
@@ -63,12 +74,14 @@ public class SymmetricMatrix {
      */
     public float get(int row, int col) {
         // Ensure row and col are valid indices
-        if (row < 0 || col < 0 || row >= size || col >= size) {
+        if (row < 0 || col < 0 || row >= symMatrixSize || col >= symMatrixSize) {
             throw new IllegalArgumentException("Invalid indices");
         }
 
+        if (row == col) return 1;
+
         int index = mapIndex(row, col);
-        return (row == col) ? 1 : data[index];
+        return data[index];
     }
 
     /**
@@ -93,5 +106,16 @@ public class SymmetricMatrix {
 
         // Calculate the index in the one-dimensional array
         return row * (row - 1) / 2 + col;
+    }
+
+    public void printMatrix(boolean fullMatrix) {
+        System.out.println("\n--> Matrix");
+        for (int i = 0; i < this.symMatrixSize; i++) {
+            for (int j = 0; j < this.symMatrixSize; j++) {
+                if (fullMatrix || j <= i) System.out.printf("%-8.2f", this.get(i, j));
+                else System.out.print("~");
+            }
+        System.out.println();
+        }
     }
 }
