@@ -108,6 +108,12 @@ public class SymmetricMatrix {
         return row * (row - 1) / 2 + col;
     }
 
+    /**
+     * Prints the symmetric matrix to the console.
+     *
+     * @param fullMatrix If true, prints the entire matrix; if false, prints only the lower triangular part,
+     *                   assuming 1 as the value for the diagonal elements.
+     */
     public void printMatrix(boolean fullMatrix) {
         System.out.println("\n--> Matrix");
         for (int i = 0; i < this.symMatrixSize; i++) {
