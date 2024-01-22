@@ -97,6 +97,7 @@ public class SimilarityUtils {
             normB += Math.pow(emailToCompareNormalizedVector[i], 2);
         }
         float euclideanDist = (float) (Math.sqrt(normA) * Math.sqrt(normB));
+        if (euclideanDist == 0.0) return 0.0f;
         return dotProduct / euclideanDist;
     }
 
